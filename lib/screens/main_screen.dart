@@ -3,6 +3,7 @@ import 'package:table_calendar/table_calendar.dart';
 import '../models/reservation.dart';
 import '../widgets/reservation_list.dart';
 import '../widgets/add_reservation_form.dart';
+import 'package:intl/intl.dart';
 
 class MainScreen extends StatefulWidget {
   @override
@@ -17,12 +18,10 @@ class _MainScreenState extends State<MainScreen> {
   @override
   void initState() {
     super.initState();
-    // Fetch reservations when the MainScreen is created
     fetchReservations();
   }
 
   Future<void> fetchReservations() async {
-    // Replace this with your actual data fetching logic
     await Future.delayed(Duration(seconds: 2));
     setState(() {
       reservations = [
@@ -50,7 +49,10 @@ class _MainScreenState extends State<MainScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Beauty Center System'),
+        title: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Text('Beauty Center System'),
+        ),
       ),
       body: _buildBody(),
       bottomNavigationBar: BottomNavigationBar(
@@ -65,10 +67,8 @@ class _MainScreenState extends State<MainScreen> {
           ),
         ],
         onTap: (index) {
-          // Handle tab selection
           setState(() {
             _selectedIndex = index;
-            // Update the PageView when tapping on the BottomNavigationBar
             _pageController.animateToPage(
               index,
               duration: Duration(milliseconds: 300),
@@ -80,7 +80,6 @@ class _MainScreenState extends State<MainScreen> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
-          // Use await to get the result when the AddReservationScreen is popped
           final result = await Navigator.push(context, MaterialPageRoute(
             builder: (context) => AddReservationForm(
               onAddReservation: onAddReservation,
@@ -90,6 +89,7 @@ class _MainScreenState extends State<MainScreen> {
             fetchReservations();
           }
         },
+        backgroundColor: Colors.green,
         child: Icon(Icons.add),
       ),
     );
@@ -101,18 +101,14 @@ class _MainScreenState extends State<MainScreen> {
     return PageView(
       controller: _pageController,
       onPageChanged: (index) {
-        // Update the BottomNavigationBar's selected index when swiping between pages
         setState(() {
           _selectedIndex = index;
         });
       },
       children: [
-        // Reservations Tab
         reservations.isEmpty
             ? Center(child: CircularProgressIndicator())
             : ReservationList(reservations: reservations, onDelete: onDeleteReservation),
-
-        // Calendar Tab
         _buildCalendarView(),
       ],
     );
@@ -150,10 +146,30 @@ class _MainScreenState extends State<MainScreen> {
         itemBuilder: (context, index) {
           final reservation = filteredReservations[index];
 
-          return ListTile(
-            title: Text(reservation.name),
-            subtitle: Text('${reservation.owner} - ${reservation.work}'),
-            trailing: Text('${reservation.time.hour}:${reservation.time.minute}'),
+          return Card(
+            margin: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+            child: ListTile(
+              title: Text(reservation.name),
+              subtitle: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('${reservation.owner} - ${reservation.work}'),
+                  Text('Date: ${DateFormat('yyyy-MM-dd').format(reservation.time)}'),
+                ],
+              ),
+              trailing: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  IconButton(
+                    icon: Icon(Icons.delete),
+                    onPressed: () {
+                      onDeleteReservation(reservation);
+                    },
+                  ),
+                  Text('${reservation.time.hour}:${reservation.time.minute}'),
+                ],
+              ),
+            ),
           );
         },
       ),
