@@ -114,24 +114,32 @@ class _MainScreenState extends State<MainScreen> {
     );
   }
 
-  Widget _buildCalendarView() {
-    return Column(
-      children: [
-        TableCalendar(
-          firstDay: DateTime.utc(2024, 1, 1),
-          lastDay: DateTime.utc(2024, 1, 30),
-          focusedDay: selectedDay,
-          onDaySelected: (selectedDay, focusedDay) {
-            setState(() {
-              this.selectedDay = selectedDay;
-            });
-          },
-        ),
-        SizedBox(height: 16),
-        _buildReservationsForDate(selectedDay),
-      ],
-    );
+  List<dynamic> _dateHasReservations(DateTime date) {
+    return reservations.where((reservation) =>
+        reservation.time.year == date.year &&
+        reservation.time.month == date.month &&
+        reservation.time.day == date.day).toList();
   }
+
+  Widget _buildCalendarView() {
+  return Column(
+    children: [
+      TableCalendar(
+        firstDay: DateTime.utc(2024, 1, 1),
+        lastDay: DateTime.utc(2024, 1, 30),
+        focusedDay: selectedDay,
+        onDaySelected: (selectedDay, focusedDay) {
+          setState(() {
+            this.selectedDay = selectedDay;
+          });
+        },
+      ),
+      SizedBox(height: 16),
+      _buildReservationsForDate(selectedDay),
+    ],
+  );
+}
+ 
 
   Widget _buildReservationsForDate(DateTime date) {
     final filteredReservations = reservations.where((reservation) {
