@@ -65,20 +65,44 @@ class _AddReservationFormState extends State<AddReservationForm> {
             decoration: InputDecoration(labelText: 'Work About Reservation'),
           ),
           SizedBox(height: 16),
-          ElevatedButton(
-            onPressed: () {
-              final name = nameController.text;
-              final owner = ownerController.text;
-              final work = workController.text;
-              final newReservation = Reservation(name: name, owner: owner, time: selectedTime, work: work);
-              widget.onAddReservation(newReservation);
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.pop(context); // Close the add reservation screen without adding a reservation
+                },
+                child: Text('Cancel'),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  final name = nameController.text;
+                  final owner = ownerController.text;
+                  final work = workController.text;
 
-              Navigator.pop(context); // Close the add reservation screen
-            },
-            child: Text('Add Reservation'),
+                  // Validate that all fields are filled
+                  if (name.isEmpty || owner.isEmpty || work.isEmpty) {
+                    // Show an error message or handle it as needed
+                    // For simplicity, this example shows a snackbar
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text('Please fill in all fields.'),
+                      ),
+                    );
+                  } else {
+                    final newReservation = Reservation(name: name, owner: owner, time: selectedTime, work: work);
+                    widget.onAddReservation(newReservation);
+
+                    Navigator.pop(context); // Close the add reservation screen
+                  }
+                },
+                child: Text('Add Reservation'),
+              ),
+            ],
           ),
         ],
       ),
     );
   }
 }
+
