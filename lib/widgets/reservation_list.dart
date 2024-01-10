@@ -44,10 +44,12 @@ class _ReservationListState extends State<ReservationList> {
             onChanged: filterReservations,
             decoration: InputDecoration(
               labelText: 'Search Reservations',
-              prefixIcon: Icon(Icons.search),
+              labelStyle: TextStyle(color: Color.fromARGB(186, 242, 241, 241)),
+              prefixIcon: Icon(Icons.search, color: Colors.white),
             ),
           ),
         ),
+        SizedBox(height: 20),
         Expanded(
           child: ListView.builder(
             itemCount: filteredReservations.length,
@@ -56,29 +58,47 @@ class _ReservationListState extends State<ReservationList> {
 
               return Card(
                 margin: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-                child: ListTile(
-                  title: Text(reservation.name),
-                  subtitle: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text('${reservation.owner} - ${reservation.work}'),
-                      Text('Date: ${DateFormat('yyyy-MM-dd').format(reservation.time)}'),
-                    ],
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(4),
+                    color: Color.fromARGB(255, 29, 9, 48).withOpacity(0.5), // Change the background color of the Card
                   ),
-                  trailing: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      IconButton(
-                        icon: Icon(Icons.delete),
-                        onPressed: () {
-                          widget.onDelete(reservation);
-                        },
-                      ),
-                      Text('${reservation.time.hour}:${reservation.time.minute}'),
-                    ],
+                  child: ListTile(
+                    title: Text(
+                      reservation.name,
+                      style: TextStyle(color: Colors.white), // Change text color
+                    ),
+                    subtitle: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          '${reservation.owner} - ${reservation.work}',
+                          style: TextStyle(color: Colors.white), // Change text color
+                        ),
+                        Text(
+                          'Date: ${DateFormat('yyyy-MM-dd').format(reservation.time)}',
+                          style: TextStyle(color: Colors.white), // Change text color
+                        ),
+                      ],
+                    ),
+                    trailing: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          '${reservation.time.hour}:${reservation.time.minute}   ',
+                          style: TextStyle(color: Colors.white), // Change text color
+                        ),
+                        IconButton(
+                          icon: Icon(Icons.delete,color: Colors.white,),
+                          onPressed: () {
+                            widget.onDelete(reservation);
+                          },
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-              );
+        );
             },
           ),
         ),

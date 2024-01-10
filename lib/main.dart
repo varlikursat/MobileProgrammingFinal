@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'screens/main_screen.dart';
 import 'screens/add_reservation_screen.dart';
+import 'screens/login_screen.dart';
 
 void main() {
   runApp(MyApp());
@@ -14,18 +15,16 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: MainScreen(),
+      initialRoute: '/login', // Set the initial route to the login screen
       routes: {
+        '/login': (context) => LoginScreen(), // Add the login screen route
+        '/main': (context) => MainScreen(),
         '/add_reservation': (context) => AddReservationScreen(
-              onAddReservation: (reservation) {
-              },
-            ),
+          onAddReservation: (reservation) {},
+        ),
       },
       builder: (context, child) {
         return Scaffold(
-          appBar: AppBar(
-            title: Text('Beauty Center System'),
-          ),
           body: child,
         );
       },

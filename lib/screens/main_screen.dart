@@ -54,7 +54,6 @@ class _MainScreenState extends State<MainScreen> {
           child: Text('Beauty Center System'),
         ),
       ),
-      body: _buildBody(),
       bottomNavigationBar: BottomNavigationBar(
         items: [
           BottomNavigationBarItem(
@@ -92,6 +91,16 @@ class _MainScreenState extends State<MainScreen> {
         backgroundColor: Colors.green,
         child: Icon(Icons.add),
       ),
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [const Color.fromARGB(255, 3, 42, 108), Color.fromARGB(255, 208, 85, 64)],
+          ),
+        ),
+        child: _buildBody(),
+      ),
     );
   }
 
@@ -124,15 +133,30 @@ class _MainScreenState extends State<MainScreen> {
   Widget _buildCalendarView() {
   return Column(
     children: [
-      TableCalendar(
-        firstDay: DateTime.utc(2024, 1, 1),
-        lastDay: DateTime.utc(2024, 1, 30),
-        focusedDay: selectedDay,
-        onDaySelected: (selectedDay, focusedDay) {
-          setState(() {
-            this.selectedDay = selectedDay;
-          });
-        },
+      Container(
+        margin: EdgeInsets.all(16),
+        padding: EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: Color.fromARGB(255, 15, 5, 78).withOpacity(0.35), // Background color of the box
+          borderRadius: BorderRadius.circular(16),
+        ),
+        child: TableCalendar(
+          firstDay: DateTime.utc(2024, 1, 1),
+          lastDay: DateTime.utc(2024, 1, 30),
+          focusedDay: selectedDay,
+          onDaySelected: (selectedDay, focusedDay) {
+            setState(() {
+              this.selectedDay = selectedDay;
+            });
+          },
+          calendarStyle: CalendarStyle(
+            defaultTextStyle: TextStyle(color: Colors.white),
+            weekendTextStyle: TextStyle(color: Colors.yellow),
+          ),
+          headerStyle: HeaderStyle(
+            titleTextStyle: TextStyle(color: Colors.white),
+          ),
+        ),
       ),
       SizedBox(height: 16),
       _buildReservationsForDate(selectedDay),
@@ -168,13 +192,13 @@ class _MainScreenState extends State<MainScreen> {
               trailing: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
+                  Text('${reservation.time.hour}:${reservation.time.minute}'),
                   IconButton(
                     icon: Icon(Icons.delete),
                     onPressed: () {
                       onDeleteReservation(reservation);
                     },
                   ),
-                  Text('${reservation.time.hour}:${reservation.time.minute}'),
                 ],
               ),
             ),
